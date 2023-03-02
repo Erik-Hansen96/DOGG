@@ -51,11 +51,11 @@ void addingDogs(vector<vector<Room>>& roomVec, Room* emptyRoom, unordered_map<st
         cin >> input;
         cin.ignore();
         if(input == 1){
-            cout << "Dog(s) currently not assigned rooms: " << endl;
+            cout << "\nDog(s) currently not assigned rooms: " << endl;
                 for(auto const& [name, dog] : dogList){
                     cout << name << endl;
                 } 
-                cout << "Enter a dog's name to put into a room" << endl;                    
+                cout << "\nEnter a dog's name to put into a room" << endl;                    
                 string doggoName;
                 getline(cin, doggoName);  
                 auto it = dogList.find(doggoName);
@@ -75,14 +75,14 @@ void addingDogs(vector<vector<Room>>& roomVec, Room* emptyRoom, unordered_map<st
                     if(found){
                         emptyRoom->roomList.emplace(doggoName, dog);
                         dogList.erase(doggoName);
-                        cout << "Inserted " << doggoName << " into room " << emptyRoom->name << endl;
+                        cout << "\nInserted " << doggoName << " into room " << emptyRoom->name << endl;
                     } else {
-                        cout << "No empty rooms. Enter 1 to add " << doggoName << " to a room anyways. Enter 2 to go back" << endl;
+                        cout << "\nNo empty rooms\n1: Choose a room for " << doggoName << "\n2: Go back" << endl;
                         int choice;
                         cin >> choice;
                         if(choice == 1){
                             string s;
-                            cout << "Enter which room you'd like to add " << doggoName << " to or Enter 2 to go back" << endl;
+                            cout << "\nEnter which room you'd like to add " << doggoName << endl;
                             reset:
                             cin >> s;
                             for(char& c : s) c = toupper(c);
@@ -94,28 +94,23 @@ void addingDogs(vector<vector<Room>>& roomVec, Room* emptyRoom, unordered_map<st
                                         found = true;
                                         roomVec.at(i).at(j).roomList.emplace(doggoName, dog);
                                         dogList.erase(doggoName);
-                                        cout << "Successfully added " << doggoName << " to room " << roomVec.at(i).at(j).name << endl;
+                                        cout << "\nSuccessfully added " << doggoName << " to room " << roomVec.at(i).at(j).name << endl;
                                         roomVec.at(i).at(j).printDogList();
                                         break;
                                     } 
                                 }
                             }
                             if(!found){
-                                cout << "Misentered room name! Enter a room or Enter 2 to go back" << endl;
+                                cout << "\nMisentered room name! Enter a room or Enter 2 to go back" << endl;
                                 goto reset;
                             }
                         }
                     }
                 } else { 
-                    cout << "Dog not found" << endl;             
+                    cout << "\nDog not found" << endl;             
                 } 
             } else if(input == 2) break;
     }
-}
-void printDogsInRoom(Room room){
-    cout << "Room " << room.name << ":" << endl;
-    for(auto& key : room.roomList)
-    cout << key.first << endl;
 }
 void printKennelMap(){
 cout << "\n A\t|\tB\t|\tC\t|\tD\n" << endl;
@@ -123,7 +118,7 @@ cout << "---------------------------------------------------\n" << endl;
 cout << " E\t|\tF\t|\tG\t|\tH\n" << endl;
 }
 void printDogInfo(Dogs d){
-    cout << d.name << "'s info:\n" << endl;
+    cout << "\n" << d.name << "'s info:\n" << endl;
     cout << "Name: " << d.name << endl;
     cout << "Breed: " << d.breed << endl;
     cout << "Size: " << d.size << endl;
@@ -133,79 +128,126 @@ void printDogInfo(Dogs d){
     cout << "Good with people: " << d.goodWithAdults << endl;
     cout << "Good with kids: " << d.goodWithKids << endl;
 }
+
 void sizeFunc(Dogs &newDog){
-    string sizeInput;
-    cout << "Size: (small, medium, large)" << endl;
-    getline(cin, sizeInput);
-    if(sizeInput == "small"){
-            newDog.size = sizeInput;
-        } else if(sizeInput == "medium"){
-            newDog.size = sizeInput;
-        } else if(sizeInput == "large"){
-            newDog.size = sizeInput;
-        } else {
-            cout << "Invalid input. Please enter small, medium, or large:" << endl;
+    int choice = 0;
+    cout << "\nSize:\n1: Small\n2: Medium\n3: Large" << endl;
+    cin >> choice;
+    if(cin.fail()){
+        cin.clear();
+        cin.ignore();
+        cout << "\nInvalid input." << endl;
+        sizeFunc(newDog);
+        return;
+    }
+    switch(choice){
+        case 1:
+            newDog.goodWithSmallDogs  = "Small"; break;
+        case 2:
+            newDog.goodWithSmallDogs = "Medium"; break;
+        case 3:
+            newDog.goodWithSmallDogs = "Large"; break;
+        default:
+            cout << "\nInvalid input." << endl;
+            cin.clear();
             sizeFunc(newDog);
+            return;
         }
 }
 void goodWithSmallDogsFunc(Dogs &newDog){
-    string sizeInput;
-    cout << "Good with small dogs? (yes, no, not sure)" << endl;
-    getline(cin, sizeInput);
-    if(sizeInput == "no"){
-            newDog.goodWithSmallDogs = sizeInput;
-        } else if(sizeInput == "yes"){
-            newDog.goodWithSmallDogs = sizeInput;
-        } else if(sizeInput == "not sure"){
-            newDog.goodWithSmallDogs = sizeInput;
-        } else {
-            cout << "Invalid input. Please enter yes, no, or not sure:" << endl;
+    int choice = 0;
+    cout << "\nGood with small dogs?\n1: Yes\n2: No\n3: Not sure" << endl;
+    cin >> choice;
+    if(cin.fail()){
+        cin.clear();
+        cin.ignore();
+        cout << "\nInvalid input." << endl;
+        sizeFunc(newDog);
+        return;
+    }
+    switch(choice){
+        case 1:
+            newDog.goodWithSmallDogs  = "Yes"; break;
+        case 2:
+            newDog.goodWithSmallDogs = "No"; break;
+        case 3:
+            newDog.goodWithSmallDogs = "Not sure"; break;
+        default:
+            cout << "Invalid input." << endl;
             goodWithSmallDogsFunc(newDog);
+            return;
         }
 }
 void goodWithLargeDogsFunc(Dogs &newDog){
-    string sizeInput;
-    cout << "Good with large dogs? (yes, no, not sure)" << endl;
-    getline(cin, sizeInput);
-    if(sizeInput == "no"){
-            newDog.goodWithLargeDogs = sizeInput;
-        } else if(sizeInput == "yes"){
-            newDog.goodWithLargeDogs = sizeInput;
-        } else if(sizeInput == "not sure"){
-            newDog.goodWithLargeDogs = sizeInput;
-        } else {
-            cout << "Invalid input. Please enter yes, no, or not sure:" << endl;
+    int choice = 0;
+    cout << "\nGood with large dogs?\n1: Yes\n2: No\n3: Not sure" << endl;
+    cin >> choice;
+    if(cin.fail()){
+        cin.clear();
+        cin.ignore();
+        cout << "\nInvalid input." << endl;
+        sizeFunc(newDog);
+        return;
+    }
+    switch(choice){
+        case 1:
+            newDog.goodWithLargeDogs  = "Yes"; break;
+        case 2:
+            newDog.goodWithLargeDogs = "No"; break;
+        case 3:
+            newDog.goodWithLargeDogs = "Not sure"; break;
+        default:
+            cout << "Invalid input." << endl;
             goodWithLargeDogsFunc(newDog);
+            return;
         }
 }
 void goodWithAdultsFunc(Dogs &newDog){
-    string sizeInput;
-    cout << "Good with people? (yes, no, not sure)" << endl;
-    getline(cin, sizeInput);
-    if(sizeInput == "no"){
-            newDog.goodWithAdults = sizeInput;
-        } else if(sizeInput == "yes"){
-            newDog.goodWithAdults  = sizeInput;
-        } else if(sizeInput == "not sure"){
-            newDog.goodWithAdults = sizeInput;
-        } else {
-            cout << "Invalid input. Please enter yes, no, or not sure:" << endl;
+    int choice;
+    cout << "\nGood with adults?\n1: Yes\n2: No\n3: Not sure" << endl;
+    cin >> choice;
+    if(cin.fail()){
+        cin.clear();
+        cin.ignore();
+        cout << "\nInvalid input." << endl;
+        sizeFunc(newDog);
+        return;
+    }
+    switch(choice){
+        case 1:
+            newDog.goodWithAdults  = "Yes"; break;
+        case 2:
+            newDog.goodWithAdults = "No"; break;
+        case 3:
+            newDog.goodWithAdults = "Not sure"; break;
+        default:
+            cout << "Invalid input." << endl;
             goodWithAdultsFunc(newDog);
+            return;
         }
 }
 void goodWithKidsFunc(Dogs &newDog){
-    string sizeInput;
-    cout << "Good with Kids? (yes, no, not sure)" << endl;
-    getline(cin, sizeInput);
-    if(sizeInput == "no"){
-            newDog.goodWithKids  = sizeInput;
-        } else if(sizeInput == "yes"){
-            newDog.goodWithKids = sizeInput;
-        } else if(sizeInput == "not sure"){
-            newDog.goodWithKids = sizeInput;
-        } else {
-            cout << "Invalid input. Please enter yes, no, or not sure:" << endl;
+    int choice;
+    cout << "\nGood with Kids?\n1: Yes\n2: No\n3: not sure" << endl;
+    cin >> choice;
+    if(cin.fail()){
+        cin.clear();
+        cin.ignore();
+        cout << "\nInvalid input." << endl;
+        sizeFunc(newDog);
+        return;
+    }
+    switch(choice){
+        case 1:
+            newDog.goodWithKids  = "Yes"; break;
+        case 2:
+            newDog.goodWithKids = "No"; break;
+        case 3:
+            newDog.goodWithKids = "Not sure"; break;
+        default:
+            cout << "Invalid input." << endl;
             goodWithKidsFunc(newDog);
+            return;
         }
 }
 int main(){
@@ -233,7 +275,7 @@ int main(){
 
     
     while(true){
-        cout << "ENTER 1 TO ADD A DOG or PRESS 2 TO SEE DOGS or PRESS 3 TO SEE KENNELS (TESTING COMMAND: 4 to fill)"  << endl;
+        cout << "\nMake a selection\n1: Create a new dog\n2: See dogs not roomed\n3: See kennels\n(TESTING COMMAND: 4 to fill)"  << endl;
         cin >> input;
         cin.ignore();
         vector<Dogs> test;
@@ -249,28 +291,27 @@ int main(){
     
         if(input == 1){
             Dogs newDog;
-            cout << "Enter dog's name: " << endl;
+            cout << "\nEnter dog's name: " << endl;
             getline(cin, newDog.name);
-/*            cout << "Breed:" << endl;
+            cout << "\nBreed:" << endl;
             cin >> newDog.breed;
             cin.ignore();
             sizeFunc(newDog);
-            cout << "Age: (use decimal 0.X if < 1 year)" << endl;
+            cout << "\nAge: (use decimal 0.X for months)" << endl;
             cin >> newDog.age;
             cin.ignore();
             goodWithSmallDogsFunc(newDog);
             goodWithLargeDogsFunc(newDog);
             goodWithAdultsFunc(newDog);
             goodWithKidsFunc(newDog);
-            */
             dogList.insert(make_pair(newDog.name, newDog));
 
         } else if(input == 2){
-            cout << "Dog list:" << endl;
+            cout << "\nDog list:" << endl;
             for(auto const& [name, dog] : dogList){
                 cout << name << endl;
             }
-            cout << "Enter a dog's name to see it's info" << endl;
+            cout << "\nEnter a dog's name to see it's info" << endl;
             string doggoName;
             getline(cin, doggoName);
             auto it = dogList.find(doggoName);
@@ -279,7 +320,7 @@ int main(){
                 Dogs dog = it->second;
                 printDogInfo(dog);
             } else {
-                cout << "Dog not found" << endl;
+                cout << "\nDog not found" << endl;
                 }
 
             } else if(input == 3){
@@ -287,7 +328,7 @@ int main(){
                 while(true){
                     
                     printKennelMap();
-                    cout << "ENTER WHICH KENNEL TO VIEW or ENTER 2 TO GO BACK" << endl; 
+                    cout << "Enter a kennel or enter 2 to go back" << endl; 
                     cin >> input1;
                     if(input1 == '2') break;
                     addingDogs(roomVec, emptyRoom, dogList, toupper(input1));
