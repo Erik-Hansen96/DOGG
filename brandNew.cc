@@ -25,26 +25,28 @@ struct Kennel{
 struct Room{
     string name;
     unordered_map<string, Dogs> roomList;
+    void printDogList(){
+        for(auto const& [name, dog] : roomList){
+            cout << name << endl;
+        } 
+    }
 };
-void roomDisplay(char);
 
-void createRoom(Room& room, string name, int num, unordered_map<string, Dogs> roomMap){
-    room.name = name + to_string(num);
-    room.roomList   = roomMap;
-}
-Room returnRoom(char c, int n, vector<vector<Room>>& roomVec){
-    roomDisplay('A');
-}
-
-void roomDisplay(char roomLetter){
+void roomDisplay(char roomLetter, vector<vector<Room>>& roomVec){
+    Room room;
     cout << "\n\n ROOM " << roomLetter << "1\t|\tROOM " << roomLetter << "2\t\t|\tROOM " << roomLetter << "3\t\t|\tROOM " << roomLetter << "4\n\n" << endl;
     cout << "--------------------------------------------------------------------------------------\n" << endl;
-    cout << "\n ROOM " << roomLetter << "5\t|\tROOM " << roomLetter << "6\t\t|\tROOM " << roomLetter << "7\t\t|\tROOM " << roomLetter << "8\n\n" << endl;
-    cout << "ENTER 1 TO ADD A DOG TO THE KENNEL or PRESS 2 TO GO BACK" << endl;
+    cout << "\n ROOM " << roomLetter << "5\t|\tROOM " << roomLetter << "6\t\t|\tROOM " << roomLetter << "7\t\t|\tROOM " << roomLetter << "8\n" << endl;
+    for(int i = 0; i < 8; i++){
+        cout << "\nRoom " << room.name << ":" << endl;
+        room.printDogList();
+        room = roomVec.at(roomLetter-65).at(i);
+    }
+    cout << "\nENTER 1 TO ADD A DOG TO THE KENNEL or PRESS 2 TO GO BACK" << endl;
 }
 void addingDogs(vector<vector<Room>>& roomVec, Room* emptyRoom, unordered_map<string, Dogs> &dogList, char roomLetter){
     while (true){
-        roomDisplay(roomLetter);
+        roomDisplay(roomLetter, roomVec);
         int input;
         cin >> input;
         cin.ignore();
@@ -85,17 +87,23 @@ void addingDogs(vector<vector<Room>>& roomVec, Room* emptyRoom, unordered_map<st
                             cin >> s;
                             for(char& c : s) c = toupper(c);
                             if(s == "2") continue;
+                            bool found = false;
                             for(int i = 0; i < 8; i++){
                                 for(int j = 0; j < 8; j++){
                                     if(roomVec.at(i).at(j).name == s){
+                                        found = true;
                                         roomVec.at(i).at(j).roomList.emplace(doggoName, dog);
                                         dogList.erase(doggoName);
                                         cout << "Successfully added " << doggoName << " to room " << roomVec.at(i).at(j).name << endl;
-                                    }
+                                        roomVec.at(i).at(j).printDogList();
+                                        break;
+                                    } 
                                 }
                             }
-                            cout << "Misentered room name! Enter a room or Enter 2 to go back" << endl;
-                            goto reset;
+                            if(!found){
+                                cout << "Misentered room name! Enter a room or Enter 2 to go back" << endl;
+                                goto reset;
+                            }
                         }
                     }
                 } else { 
@@ -104,60 +112,11 @@ void addingDogs(vector<vector<Room>>& roomVec, Room* emptyRoom, unordered_map<st
             } else if(input == 2) break;
     }
 }
-                /*
-                    cout << "Enter the # of which kennel this dog should go" << endl;
-                    cin >> choice;
-                    if(choice == 1){
-                        emptyRoom = &kennel1;
-                        emptyRoom->kennelMap.emplace(doggoName, dog);
-                        dogList.erase(doggoName);
-                    cout << "Inserted " << doggoName << " into kennel " << choice << endl;
-                    } else if(choice == 2){
-                        emptyRoom = &kennel2;
-                        emptyRoom->kennelMap.emplace(doggoName, dog);
-                        dogList.erase(doggoName);
-                    cout << "Inserted " << doggoName << " into kennel " << choice << endl;
-                    } else if(choice == 3){
-                        emptyRoom = &kennel3;
-                        emptyRoom->kennelMap.emplace(doggoName, dog);
-                        dogList.erase(doggoName);
-                    cout << "Inserted " << doggoName << " into kennel " << choice << endl;
-                    } else if(choice == 4){
-                        emptyRoom = &kennel4;
-                        emptyRoom->kennelMap.emplace(doggoName, dog);
-                        dogList.erase(doggoName);
-                    cout << "Inserted " << doggoName << " into kennel " << choice << endl;
-                    } else if(choice == 5){
-                        emptyRoom = &kennel5;
-                        emptyRoom->kennelMap.emplace(doggoName, dog);
-                        dogList.erase(doggoName);
-                    cout << "Inserted " << doggoName << " into kennel " << choice << endl;
-                    } else if(choice == 6){
-                        emptyRoom = &kennel6;
-                        emptyRoom->kennelMap.emplace(doggoName, dog);
-                        dogList.erase(doggoName);
-                    cout << "Inserted " << doggoName << " into kennel " << choice << endl;
-                    } else if(choice == 7){
-                        emptyRoom = &kennel7;
-                        emptyRoom->kennelMap.emplace(doggoName, dog);
-                        dogList.erase(doggoName);
-                    cout << "Inserted " << doggoName << " into kennel " << choice << endl;
-                    } else if(choice == 8){
-                        emptyRoom = &kennel8;
-                        emptyRoom->kennelMap.emplace(doggoName, dog);
-                        dogList.erase(doggoName);
-                    cout << "Inserted " << doggoName << " into kennel " << choice << endl;
-                    }
-                */
-
-
 void printDogsInRoom(Room room){
     cout << "Room " << room.name << ":" << endl;
     for(auto& key : room.roomList)
     cout << key.first << endl;
 }
-
-
 void printKennelMap(){
 cout << "\n A\t|\tB\t|\tC\t|\tD\n" << endl;
 cout << "---------------------------------------------------\n" << endl;
@@ -249,8 +208,6 @@ void goodWithKidsFunc(Dogs &newDog){
             goodWithKidsFunc(newDog);
         }
 }
-
-
 int main(){
     unordered_map<string, Dogs> dogList;
     unordered_map<string, Room> roomList;
