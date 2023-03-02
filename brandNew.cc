@@ -3,7 +3,7 @@
 #include <string>
 #include <unordered_map>
 using namespace std;
-//test
+
 
 struct Dogs {
     string name;
@@ -31,7 +31,9 @@ void createRoom(Room& room, string name, int num, unordered_map<string, Dogs> ro
     room.name = name + to_string(num);
     room.roomList   = roomMap;
 }
-
+Room returnRoom(char c, int n, vector<vector<Room>> roomVec){
+    
+}
 Kennel kennel1("Kennel 1");
 Kennel kennel2("Kennel 2");
 Kennel kennel3("Kennel 3");
@@ -45,51 +47,53 @@ void roomChoice(int choice){
 }
 
 void roomDisplay(vector<vector<Room>>& roomVec, Room* emptyRoom, unordered_map<string, Dogs> &dogList, char roomLetter){
-    cout << "\n ROOM " << roomLetter << "1\t|\tROOM " << roomLetter << "2\t|\tROOM " << roomLetter << "3\t|\tROOM " << roomLetter << "4\n" << endl;
-    cout << "---------------------------------------------------\n" << endl;
-    cout << "\n ROOM " << roomLetter << "5\t|\tROOM " << roomLetter << "6\t|\tROOM " << roomLetter << "7\t|\tROOM " << roomLetter << "8\n" << endl;
-    cout << "ENTER 1 TO ADD A DOG TO THE KENNEL or PRESS 2 TO GO BACK" << endl;
-    int input;
-    cin >> input;
-    cin.ignore();
-    if(input == 1){
-        cout << "Dog(s) currently not assigned rooms: " << endl;
-            for(auto const& [name, dog] : dogList){
-                cout << name << endl;
-            } 
-            cout << "Enter a dog's name to put into a room" << endl;                    
-            string doggoName;
-            getline(cin, doggoName);  
-            auto it = dogList.find(doggoName);
-            if(it != dogList.end()){
-                bool found = false;
-                int kenNum = 0;
-                Dogs dog = it->second;
-                for(int i = 0; i < 8; i++){
-                    for(int j = 0; j < 8; j++){
-                        if(roomVec.at(i).at(j).roomList.empty()){
-                            emptyRoom = &roomVec.at(i).at(j);
-                            found = true;
-                            goto exit_loops;
-                        } 
+    while(true){
+        cout << "\n\n ROOM " << roomLetter << "1\t|\tROOM " << roomLetter << "2\t\t|\tROOM " << roomLetter << "3\t\t|\tROOM " << roomLetter << "4\n\n" << endl;
+        cout << "--------------------------------------------------------------------------------------\n" << endl;
+        cout << "\n ROOM " << roomLetter << "5\t|\tROOM " << roomLetter << "6\t\t|\tROOM " << roomLetter << "7\t\t|\tROOM " << roomLetter << "8\n\n" << endl;
+        cout << "ENTER 1 TO ADD A DOG TO THE KENNEL or PRESS 2 TO GO BACK" << endl;
+        int input;
+        cin >> input;
+        cin.ignore();
+        if(input == 1){
+            cout << "Dog(s) currently not assigned rooms: " << endl;
+                for(auto const& [name, dog] : dogList){
+                    cout << name << endl;
+                } 
+                cout << "Enter a dog's name to put into a room" << endl;                    
+                string doggoName;
+                getline(cin, doggoName);  
+                auto it = dogList.find(doggoName);
+                if(it != dogList.end()){
+                    bool found = false;
+                    int kenNum = 0;
+                    Dogs dog = it->second;
+                    for(int i = 0; i < 8; i++){
+                        for(int j = 0; j < 8; j++){
+                            if(roomVec.at(i).at(j).roomList.empty()){
+                                emptyRoom = &roomVec.at(i).at(j);
+                                found = true;
+                                goto exit_loops;
+                            } 
+                        }
+                    }exit_loops:
+                    if(found){
+                        emptyRoom->roomList.emplace(doggoName, dog);
+                        dogList.erase(doggoName);
+                        cout << "Inserted " << doggoName << " into room " << emptyRoom->name << endl;
+                    } else {
+                        cout << "No empty rooms! Enter 1 to add a dog anyways. Enter 2 to go back" << endl;
+                        int choice;
+                        if(choice == 1){
+                        roomChoice(choice);
+                        }
                     }
-                }exit_loops:
-                 if(found){
-                    emptyRoom->roomList.emplace(doggoName, dog);
-                    dogList.erase(doggoName);
-                    cout << "Inserted " << doggoName << " into room " << emptyRoom->name << endl;
-                } else {
-                    cout << "No empty rooms! Enter 1 to add a dog anyways. Enter 2 to go back" << endl;
-                    int choice;
-                    if(choice == 1){
-                    roomChoice(choice);
-                    }
-                }
-            } else { 
-                cout << "Dog not found" << endl;             
-            } 
-        } else if(input == 2){
-        }
+                } else { 
+                    cout << "Dog not found" << endl;             
+                } 
+            } else if(input == 2){
+            }
+    }
 }
 
                 /*
@@ -139,7 +143,11 @@ void roomDisplay(vector<vector<Room>>& roomVec, Room* emptyRoom, unordered_map<s
                 */
 
 
-
+void printDogsInRoom(Room room){
+    cout << "Room " << room.name << ":" << endl;
+    for(auto& key : room.roomList)
+    cout << key.first << endl;
+}
 
 
 void printKennelMap(){
@@ -238,37 +246,45 @@ void goodWithKidsFunc(Dogs &newDog){
 int main(){
     unordered_map<string, Dogs> dogList;
     unordered_map<string, Room> roomList;
-   // vector<Kennel*> kennels = {&kennel1, &kennel2, &kennel3, &kennel4, &kennel5, &kennel6, &kennel7, &kennel8};
-   // unordered_map<string, Dogs>* emptyKennel = nullptr;
     Room* emptyRoom = nullptr;
     int input;
     vector<Room> firstVec(64);
     vector<vector<Room>> roomVec(8, vector<Room>(8));
-    //if(firstVec.empty()){
-        char c = 'A';
-        int count = 1;
-        for(int i = 0; i < 64; i++){
-            if(i==0){}
-            else if((count-1) % 8 == 0){
-                c += 1;
-                count = count/8;
-            }firstVec.at(i).name = c + to_string(count);
-            count++;
-        }for(int i = 0; i < 8; i++){
-            for(int j = 0; j < 8; j++){
-                roomVec.at(i).at(j) = firstVec.at(i*8+j);
-            }
+
+    char c = 'A';
+    int count = 1;
+    for(int i = 0; i < 64; i++){
+        if(i==0){}
+        else if((count-1) % 8 == 0){
+            c += 1;
+            count = count/8;
+        }firstVec.at(i).name = c + to_string(count);
+        count++;
+    }for(int i = 0; i < 8; i++){
+        for(int j = 0; j < 8; j++){
+            roomVec.at(i).at(j) = firstVec.at(i*8+j);
         }
+    }
 
     
     while(true){
-        cout << "ENTER 1 TO ADD A DOG or PRESS 2 TO SEE DOGS or PRESS 3 TO SEE KENNELS" << endl;
+        cout << "ENTER 1 TO ADD A DOG or PRESS 2 TO SEE DOGS or PRESS 3 TO SEE KENNELS (TESTING COMMAND: 4 to fill)"  << endl;
         cin >> input;
         cin.ignore();
-
+        vector<Dogs> test;
+        if(input == 4){
+            for(int i = 0; i < 8; i++){
+                for(int j = 0; j < 8; j++){
+                Dogs testDogs;
+                testDogs.name = "test" + to_string(i);
+                roomVec.at(i).at(j).roomList.insert(make_pair(testDogs.name, testDogs));
+                }
+            }
+        }
+    
         if(input == 1){
             Dogs newDog;
-            cout << "Enter dog's name:" << endl;
+            cout << "Enter dog's name: " << endl;
             getline(cin, newDog.name);
 /*            cout << "Breed:" << endl;
             cin >> newDog.breed;
