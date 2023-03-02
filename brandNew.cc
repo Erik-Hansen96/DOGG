@@ -26,32 +26,25 @@ struct Room{
     string name;
     unordered_map<string, Dogs> roomList;
 };
+void roomDisplay(char);
 
 void createRoom(Room& room, string name, int num, unordered_map<string, Dogs> roomMap){
     room.name = name + to_string(num);
     room.roomList   = roomMap;
 }
-Room returnRoom(char c, int n, vector<vector<Room>> roomVec){
-    
-}
-Kennel kennel1("Kennel 1");
-Kennel kennel2("Kennel 2");
-Kennel kennel3("Kennel 3");
-Kennel kennel4("Kennel 4");
-Kennel kennel5("Kennel 5");
-Kennel kennel6("Kennel 6");
-Kennel kennel7("Kennel 7");
-Kennel kennel8("Kennel 8");
-void roomChoice(int choice){
-    cout << "Swag";
+Room returnRoom(char c, int n, vector<vector<Room>>& roomVec){
+    roomDisplay('A');
 }
 
-void roomDisplay(vector<vector<Room>>& roomVec, Room* emptyRoom, unordered_map<string, Dogs> &dogList, char roomLetter){
-    while(true){
-        cout << "\n\n ROOM " << roomLetter << "1\t|\tROOM " << roomLetter << "2\t\t|\tROOM " << roomLetter << "3\t\t|\tROOM " << roomLetter << "4\n\n" << endl;
-        cout << "--------------------------------------------------------------------------------------\n" << endl;
-        cout << "\n ROOM " << roomLetter << "5\t|\tROOM " << roomLetter << "6\t\t|\tROOM " << roomLetter << "7\t\t|\tROOM " << roomLetter << "8\n\n" << endl;
-        cout << "ENTER 1 TO ADD A DOG TO THE KENNEL or PRESS 2 TO GO BACK" << endl;
+void roomDisplay(char roomLetter){
+    cout << "\n\n ROOM " << roomLetter << "1\t|\tROOM " << roomLetter << "2\t\t|\tROOM " << roomLetter << "3\t\t|\tROOM " << roomLetter << "4\n\n" << endl;
+    cout << "--------------------------------------------------------------------------------------\n" << endl;
+    cout << "\n ROOM " << roomLetter << "5\t|\tROOM " << roomLetter << "6\t\t|\tROOM " << roomLetter << "7\t\t|\tROOM " << roomLetter << "8\n\n" << endl;
+    cout << "ENTER 1 TO ADD A DOG TO THE KENNEL or PRESS 2 TO GO BACK" << endl;
+}
+void addingDogs(vector<vector<Room>>& roomVec, Room* emptyRoom, unordered_map<string, Dogs> &dogList, char roomLetter){
+    while (true){
+        roomDisplay(roomLetter);
         int input;
         cin >> input;
         cin.ignore();
@@ -82,20 +75,35 @@ void roomDisplay(vector<vector<Room>>& roomVec, Room* emptyRoom, unordered_map<s
                         dogList.erase(doggoName);
                         cout << "Inserted " << doggoName << " into room " << emptyRoom->name << endl;
                     } else {
-                        cout << "No empty rooms! Enter 1 to add a dog anyways. Enter 2 to go back" << endl;
+                        cout << "No empty rooms. Enter 1 to add " << doggoName << " to a room anyways. Enter 2 to go back" << endl;
                         int choice;
+                        cin >> choice;
                         if(choice == 1){
-                        roomChoice(choice);
+                            string s;
+                            cout << "Enter which room you'd like to add " << doggoName << " to or Enter 2 to go back" << endl;
+                            reset:
+                            cin >> s;
+                            for(char& c : s) c = toupper(c);
+                            if(s == "2") continue;
+                            for(int i = 0; i < 8; i++){
+                                for(int j = 0; j < 8; j++){
+                                    if(roomVec.at(i).at(j).name == s){
+                                        roomVec.at(i).at(j).roomList.emplace(doggoName, dog);
+                                        dogList.erase(doggoName);
+                                        cout << "Successfully added " << doggoName << " to room " << roomVec.at(i).at(j).name << endl;
+                                    }
+                                }
+                            }
+                            cout << "Misentered room name! Enter a room or Enter 2 to go back" << endl;
+                            goto reset;
                         }
                     }
                 } else { 
                     cout << "Dog not found" << endl;             
                 } 
-            } else if(input == 2){
-            }
+            } else if(input == 2) break;
     }
 }
-
                 /*
                     cout << "Enter the # of which kennel this dog should go" << endl;
                     cin >> choice;
@@ -318,11 +326,15 @@ int main(){
                 }
 
             } else if(input == 3){
-                printKennelMap();
                 char input1;
-                cout << "ENTER WHICH KENNEL TO VIEW" << endl; 
-                cin >> input1;
-                roomDisplay(roomVec, emptyRoom, dogList, toupper(input1));
+                while(true){
+                    
+                    printKennelMap();
+                    cout << "ENTER WHICH KENNEL TO VIEW or ENTER 2 TO GO BACK" << endl; 
+                    cin >> input1;
+                    if(input1 == '2') break;
+                    addingDogs(roomVec, emptyRoom, dogList, toupper(input1));
+                }
             }
         }
     }
