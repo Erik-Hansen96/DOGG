@@ -47,20 +47,44 @@ void roomDisplay(char roomLetter, vector<vector<Room>>& roomVec){
     }
     for(int i = 0; i < 7; i++){
         if (count == 0){
-        cout << "\n\n\tROOM " << rooms[0].name << "\t      |\t" << "     ROOM " << rooms[1].name << "\t     |\t" << "     ROOM " << rooms[2].name << "\t    |\t" << "     ROOM " << rooms[3].name << endl; 
+        cout << "\n\n\tROOM " << rooms[0].name << "\t      |\t" << "     ROOM " << rooms[1].name << "\t     |\t" << "     ROOM " << rooms[2].name << "\t    |\t" << "     ROOM " << rooms[3].name << "\t   |" << endl; 
         } else {
-            string spaces[4];
             int length;
             for (int j = 0; j < 4; j++){
-                length = rooms[j].dogNames.at(i-1).length();
-               // cout << length << endl;
-                spaces[j].append(22-length, ' ');
+                if(i <= rooms[j].dogNames.size()){
+                    length = rooms[j].dogNames[i-1].length();
+                    string spaces(22-length, ' ');
+                    cout << rooms[j].dogNames[i-1] << spaces << "|";
+                } else {
+                    string spaces(22, ' ');
+                    cout << spaces << "|";
+                }
             }
-            cout << rooms[0].dogNames.at(i-1) << spaces[0] <<  "|" << rooms[1].dogNames.at(i-1) << spaces[1] << "|" << rooms[2].dogNames.at(i-1) << spaces[2] << "|" << rooms[3].dogNames.at(i-1) << endl;
-        } count++;
-    }
+                cout << endl;
+            }count++;
+        } 
+    cout << "\n----------------------------------------------------------------------------------------------" << endl;
+    int count2 = 0;
+    for(int i = 0; i < 7; i++){
+        if (count2 == 0){
+        cout << "\n\n\tROOM " << rooms[4].name << "\t      |\t" << "     ROOM " << rooms[5].name << "\t     |\t" << "     ROOM " << rooms[6].name << "\t    |\t" << "     ROOM " << rooms[7].name << "\t   |" << endl; 
+        } else {
+            int length;
+            for (int j = 4; j < 8; j++){
+                if(i <= rooms[j].dogNames.size()){
+                    length = rooms[j].dogNames[i-1].length();
+                    string spaces(22-length, ' ');
+                    cout << rooms[j].dogNames[i-1] << spaces << "|";
+                } else {
+                    string spaces(22, ' ');
+                    cout << spaces << "|";
+                }
+            }
+                cout << endl;
+            }count2++;
+        } 
     
-    cout << "\nENTER 1 TO ADD A DOG TO THE KENNEL or PRESS 2 TO GO BACK" << endl;
+    cout << "\nChoose a selection:\n1: Add a dog to the kennel\n2: Go back\n3: Remove a dog from the kennel" << endl;
 }
 void addingDogs(vector<vector<Room>>& roomVec, Room* emptyRoom, unordered_map<string, Dogs> &dogList, char roomLetter){
     while (true){
@@ -127,9 +151,42 @@ void addingDogs(vector<vector<Room>>& roomVec, Room* emptyRoom, unordered_map<st
                 } else { 
                     cout << "\nDog not found" << endl;             
                 } 
-            } else if(input == 2) break;
+            } else if(input == 2){
+                break;
+            }
+            else if(input == 3){
+                cout << "\nEnter a room to remove a dog from" << endl;
+                bool found = false;
+                string roomToRemove;
+                cin >> roomToRemove;
+                cin.ignore();
+                roomToRemove[0] = toupper(roomToRemove[0]);
+                for(int i = 0; i < 8; i++){
+                    for(int j = 0; j < 8; j++){
+                        if(roomVec.at(i).at(j).name == roomToRemove){
+                            found = true;
+                            cout << "\nDogs in room " << roomVec.at(i).at(j).name << ":" << endl;
+                            roomVec.at(i).at(j).printDogList();
+                            cout << "\nEnter which dog you would like to remove" << endl;
+                            string dogToRemove;
+                            getline(cin, dogToRemove);  
+                            auto it = roomVec.at(i).at(j).roomList.find(dogToRemove);
+                            if(it != roomVec.at(i).at(j).roomList.end()){
+                                bool found = false;
+                                Dogs dog = it->second;
+                                dogList.emplace(dogToRemove, dog);
+                                roomVec.at(i).at(j).roomList.erase(dogToRemove);
+                                cout << "\nSuccessfully removed " << dogToRemove << " from room " << roomVec.at(i).at(j).name << endl;
+                                return;
+                            } 
+                        }
+                    } 
+                }
+            }
+
     }
 }
+
 void printKennelMap(){
 cout << "\n A\t|\tB\t|\tC\t|\tD\n" << endl;
 cout << "---------------------------------------------------\n" << endl;
@@ -246,7 +303,7 @@ void goodWithAdultsFunc(Dogs &newDog){
 }
 void goodWithKidsFunc(Dogs &newDog){
     int choice;
-    cout << "\nGood with Kids?\n1: Yes\n2: No\n3: not sure" << endl;
+    cout << "\nGood with Kids?\n1: Yes\n2: No\n3: Not sure" << endl;
     cin >> choice;
     if(cin.fail()){
         cin.clear();
