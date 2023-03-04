@@ -30,18 +30,36 @@ struct Room{
             cout << name << endl;
         } 
     }
+    vector<string> dogNames;
+    void fillVec(){
+        for(auto const& [name, dog] : roomList){
+            dogNames.push_back(name);
+        } 
+    }
 };
 
 void roomDisplay(char roomLetter, vector<vector<Room>>& roomVec){
-    Room room;
-    cout << "\n\n ROOM " << roomLetter << "1\t|\tROOM " << roomLetter << "2\t\t|\tROOM " << roomLetter << "3\t\t|\tROOM " << roomLetter << "4\n\n" << endl;
-    cout << "--------------------------------------------------------------------------------------\n" << endl;
-    cout << "\n ROOM " << roomLetter << "5\t|\tROOM " << roomLetter << "6\t\t|\tROOM " << roomLetter << "7\t\t|\tROOM " << roomLetter << "8\n" << endl;
-    for(int i = 0; i < 8; i++){
-        cout << "\nRoom " << room.name << ":" << endl;
-        room.printDogList();
-        room = roomVec.at(roomLetter-65).at(i);
+    int count = 0;
+    Room rooms[8];
+    for (int i = 0; i < 8; i++) {
+        rooms[i] = roomVec.at(roomLetter - 65).at(i);
+        rooms[i].fillVec();
     }
+    for(int i = 0; i < 7; i++){
+        if (count == 0){
+        cout << "\n\n\tROOM " << rooms[0].name << "\t      |\t" << "     ROOM " << rooms[1].name << "\t     |\t" << "     ROOM " << rooms[2].name << "\t    |\t" << "     ROOM " << rooms[3].name << endl; 
+        } else {
+            string spaces[4];
+            int length;
+            for (int j = 0; j < 4; j++){
+                length = rooms[j].dogNames.at(i-1).length();
+               // cout << length << endl;
+                spaces[j].append(22-length, ' ');
+            }
+            cout << rooms[0].dogNames.at(i-1) << spaces[0] <<  "|" << rooms[1].dogNames.at(i-1) << spaces[1] << "|" << rooms[2].dogNames.at(i-1) << spaces[2] << "|" << rooms[3].dogNames.at(i-1) << endl;
+        } count++;
+    }
+    
     cout << "\nENTER 1 TO ADD A DOG TO THE KENNEL or PRESS 2 TO GO BACK" << endl;
 }
 void addingDogs(vector<vector<Room>>& roomVec, Room* emptyRoom, unordered_map<string, Dogs> &dogList, char roomLetter){
@@ -283,7 +301,17 @@ int main(){
             for(int i = 0; i < 8; i++){
                 for(int j = 0; j < 8; j++){
                 Dogs testDogs;
-                testDogs.name = "test" + to_string(i);
+                testDogs.name = "test" + to_string(i+10);
+                roomVec.at(i).at(j).roomList.insert(make_pair(testDogs.name, testDogs));
+                testDogs.name = "test" + to_string(i+200);
+                roomVec.at(i).at(j).roomList.insert(make_pair(testDogs.name, testDogs));
+                testDogs.name = "test" + to_string(i+3);
+                roomVec.at(i).at(j).roomList.insert(make_pair(testDogs.name, testDogs));
+                testDogs.name = "test" + to_string(i+4000);
+                roomVec.at(i).at(j).roomList.insert(make_pair(testDogs.name, testDogs));
+                testDogs.name = "test" + to_string(i+50000);
+                roomVec.at(i).at(j).roomList.insert(make_pair(testDogs.name, testDogs));
+                testDogs.name = "test" + to_string(i+6);
                 roomVec.at(i).at(j).roomList.insert(make_pair(testDogs.name, testDogs));
                 }
             }
