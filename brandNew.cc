@@ -418,5 +418,3 @@ int main(){
                     cout << "Enter a kennel or enter 2 to go back" << endl; 
                     cin >> input1;
                     if(input1 == '2') break;addingDogs(roomVec, emptyRoom, dogList, toupper(input1));}}else cout << "Bad input" << endl;}}
-
- 
