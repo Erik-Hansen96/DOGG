@@ -3,8 +3,6 @@
 #include <string>
 #include <unordered_map>
 using namespace std;
-
-
 struct Dogs {
     string name;
     string breed;
@@ -37,7 +35,6 @@ struct Room{
         } 
     }
 };
-
 void roomDisplay(char roomLetter, vector<vector<Room>>& roomVec){
     int count = 0;
     Room rooms[8];
@@ -186,7 +183,6 @@ void addingDogs(vector<vector<Room>>& roomVec, Room* emptyRoom, unordered_map<st
 
     }
 }
-
 void printKennelMap(){
 cout << "\n A\t|\tB\t|\tC\t|\tD\n" << endl;
 cout << "---------------------------------------------------\n" << endl;
@@ -332,7 +328,6 @@ int main(){
     int input;
     vector<Room> firstVec(64);
     vector<vector<Room>> roomVec(8, vector<Room>(8));
-
     char c = 'A';
     int count = 1;
     for(int i = 0; i < 64; i++){
@@ -347,11 +342,15 @@ int main(){
             roomVec.at(i).at(j) = firstVec.at(i*8+j);
         }
     }
-
-    
     while(true){
         cout << "\nMake a selection\n1: Create a new dog\n2: See dogs not roomed\n3: See kennels\n(TESTING COMMAND: 4 to fill)"  << endl;
         cin >> input;
+        if(cin.fail()){
+            cout << "\nInvalid input" << endl; 
+            cin.clear(); 
+            cin.ignore(); 
+            continue;
+        } 
         cin.ignore();
         vector<Dogs> test;
         if(input == 4){
@@ -373,7 +372,6 @@ int main(){
                 }
             }
         }
-    
         if(input == 1){
             Dogs newDog;
             cout << "\nEnter dog's name: " << endl;
@@ -384,13 +382,18 @@ int main(){
             sizeFunc(newDog);
             cout << "\nAge: (use decimal 0.X for months)" << endl;
             cin >> newDog.age;
+            if(cin.fail()){
+                cout << "\nInvalid input" << endl; 
+                cin.clear(); 
+                cin.ignore(); 
+                continue;
+            } 
             cin.ignore();
             goodWithSmallDogsFunc(newDog);
             goodWithLargeDogsFunc(newDog);
             goodWithAdultsFunc(newDog);
             goodWithKidsFunc(newDog);
             dogList.insert(make_pair(newDog.name, newDog));
-
         } else if(input == 2){
             cout << "\nDog list:" << endl;
             for(auto const& [name, dog] : dogList){
@@ -407,7 +410,6 @@ int main(){
             } else {
                 cout << "\nDog not found" << endl;
                 }
-
             } else if(input == 3){
                 char input1;
                 while(true){
@@ -415,11 +417,6 @@ int main(){
                     printKennelMap();
                     cout << "Enter a kennel or enter 2 to go back" << endl; 
                     cin >> input1;
-                    if(input1 == '2') break;
-                    addingDogs(roomVec, emptyRoom, dogList, toupper(input1));
-                }
-            }
-        }
-    }
+                    if(input1 == '2') break;addingDogs(roomVec, emptyRoom, dogList, toupper(input1));}}else cout << "Bad input" << endl;}}
 
  
