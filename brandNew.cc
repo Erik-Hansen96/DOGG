@@ -13,7 +13,9 @@ struct Dogs {
     string goodWithAdults;
     string goodWithKids;
     string room;
+    void getSize();
 };
+
 struct Kennel{
     string name;
    //TODO int occupants;
@@ -213,11 +215,11 @@ void sizeFunc(Dogs &newDog){
     }
     switch(choice){
         case 1:
-            newDog.goodWithSmallDogs  = "Small"; break;
+            newDog.size  = "Small"; break;
         case 2:
-            newDog.goodWithSmallDogs = "Medium"; break;
+            newDog.size = "Medium"; break;
         case 3:
-            newDog.goodWithSmallDogs = "Large"; break;
+            newDog.size = "Large"; break;
         default:
             cout << "\nInvalid input." << endl;
             cin.clear();
@@ -370,7 +372,7 @@ int main(){
                 testDogs.name = "test" + to_string(i+6);
                 roomVec.at(i).at(j).roomList.insert(make_pair(testDogs.name, testDogs));
                 }
-            }
+            }continue;
         }
         if(input == 1){
             Dogs newDog;
@@ -417,4 +419,17 @@ int main(){
                     printKennelMap();
                     cout << "Enter a kennel or enter 2 to go back" << endl; 
                     cin >> input1;
-                    if(input1 == '2') break;addingDogs(roomVec, emptyRoom, dogList, toupper(input1));}}else cout << "Bad input" << endl;}}
+                    if(cin.fail() or ((!isalpha(input1) and input1 != '2')) and (input1 < 65 or input1 > 72) and (input1 < 97 or input1 > 104)){
+                        cout << "\nInvalid input" << endl; 
+                        cin.clear(); 
+                        cin.ignore(); 
+                        continue;
+                    } 
+                    if(input1 == '2') break;
+                    addingDogs(roomVec, emptyRoom, dogList, toupper(input1));
+                }
+            } else {
+                cout << "Bad input" << endl;
+            } 
+        }
+    }
