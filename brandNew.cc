@@ -204,6 +204,7 @@ void addingDogs(vector<vector<Room>>& roomVec, Room* emptyRoom, unordered_map<st
                             if(it != roomVec.at(i).at(j).roomList.end()){
                                 bool found = false;
                                 Dogs dog = it->second;
+                                dog.room = "FF";
                                 dogList.emplace(dogToRemove, dog);
                                 roomVec.at(i).at(j).roomList.erase(dogToRemove);
                                 cout << "\nSuccessfully removed " << dogToRemove << " from room " << roomVec.at(i).at(j).name << endl;
@@ -402,11 +403,12 @@ int main(){
 
         for(int i = 0; i < roomVec.size(); i++){
             for(int j = 0; j < roomVec.at(i).size(); j++){
-               // cout << roomVec.at(i).at(j).name << endl;
                 if(roomVec.at(i).at(j).name == dog.room){
                     room.roomList.insert(make_pair(dog.name, dog));
                     room.name = dog.room;
                     roomVec.at(i).at(j) = room;
+                } else if(dog.room == "FF"){
+                    dogList.insert(make_pair(dog.name, dog));
                 }
             }
         }
@@ -501,6 +503,18 @@ int main(){
             } else if (input == 5){
                 ofstream outFile("save.txt");
                 if(outFile.is_open()){
+                    for(const auto& dog : dogList){
+                                outFile << dog.second.name << endl;
+                                outFile << dog.second.breed << endl;
+                                outFile << dog.second.size << endl;
+                                outFile << dog.second.age << endl;
+                                outFile << dog.second.goodWithSmallDogs << endl;
+                                outFile << dog.second.goodWithLargeDogs << endl;
+                                outFile << dog.second.goodWithAdults << endl;
+                                outFile << dog.second.goodWithKids << endl; 
+                                outFile << dog.second.room << endl;
+
+                            }
                     for(int i = 0; i < roomVec.size(); i++){
                         for(int j = 0; j < roomVec.at(i).size(); j++){
                             for(const auto& dog : roomVec.at(i).at(j).roomList){
