@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <iostream>
+#include <fstream>
 #include <unordered_map>
 using namespace std;
 struct Dogs {
@@ -132,6 +134,11 @@ void addingDogs(vector<vector<Room>>& roomVec, Room* emptyRoom, unordered_map<st
                             for(int i = 0; i < 8; i++){
                                 for(int j = 0; j < 8; j++){
                                     if(roomVec.at(i).at(j).name == s){
+                                        if(roomVec.at(i).at(j).roomList.size() >= 6){
+                                            cout << "\nRoom " << roomVec.at(i).at(j).name << " is full" << endl;
+                                            found = true;
+                                            break;
+                                        }
                                         found = true;
                                         roomVec.at(i).at(j).roomList.emplace(doggoName, dog);
                                         dogList.erase(doggoName);
@@ -344,6 +351,40 @@ int main(){
             roomVec.at(i).at(j) = firstVec.at(i*8+j);
         }
     }
+    ifstream inFile("save.txt");
+    string line;
+    int m = 0, n = 0;
+    while (getline(inFile, line)) {
+        Dogs dog;
+        Room room;
+        dog.name = line;
+        getline(inFile, line);
+        dog.breed = line;
+        getline(inFile, line);
+        dog.size = line;
+        getline(inFile, line);
+        dog.age = stof(line);
+        getline(inFile, line);
+        dog.goodWithSmallDogs = line;
+        getline(inFile, line);
+        dog.goodWithLargeDogs = line;
+        getline(inFile, line);
+        dog.goodWithAdults = line;
+        getline(inFile, line);
+        dog.goodWithKids = line;
+        room.roomList.insert(make_pair(dog.name, dog));
+        string roomName = roomVec.at(m).at(n).name;
+        room.name = roomName;
+        roomVec[m][n] = room;
+
+        n++;
+        if(n == 8){
+            n = 0;
+            m++;
+        }
+    }
+    
+    inFile.close();
     while(true){
         cout << "\nMake a selection\n1: Create a new dog\n2: See dogs not roomed\n3: See kennels\n(TESTING COMMAND: 4 to fill)"  << endl;
         cin >> input;
@@ -428,6 +469,26 @@ int main(){
                     if(input1 == '2') break;
                     addingDogs(roomVec, emptyRoom, dogList, toupper(input1));
                 }
+            } else if (input == 5){
+                ofstream outFile("save.txt");
+                if(outFile.is_open()){
+                    for(int i = 0; i < roomVec.size(); i++){
+                        for(int j = 0; j < roomVec.at(i).size(); j++){
+                            for(const auto& dog : roomVec.at(i).at(j).roomList){
+                                outFile << dog.second.name << endl;
+                                outFile << dog.second.breed << endl;
+                                outFile << dog.second.size << endl;
+                                outFile << dog.second.age << endl;
+                                outFile << dog.second.goodWithSmallDogs << endl;
+                                outFile << dog.second.goodWithLargeDogs << endl;
+                                outFile << dog.second.goodWithAdults << endl;
+                                outFile << dog.second.goodWithKids << endl;
+
+                            }
+                        }
+                    } outFile.close();
+                }
+
             } else {
                 cout << "Bad input" << endl;
             } 
