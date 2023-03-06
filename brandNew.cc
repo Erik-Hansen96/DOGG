@@ -16,7 +16,7 @@ struct Dogs {
     string goodWithKids;
     string room;
 
-    Dogs() { // default constructor
+    Dogs() {
         name = "default";
         breed = "default";
         size = "Small";
@@ -28,6 +28,17 @@ struct Dogs {
         room = "FF";
     }
 };
+
+/* void dogScore(){
+int score = 0;
+int sizeScore = 0;
+if(dog.size == "Small"){
+
+}
+}*/
+
+
+
 
 struct Kennel{
     string name;
@@ -391,29 +402,20 @@ int main(){
 
         for(int i = 0; i < roomVec.size(); i++){
             for(int j = 0; j < roomVec.at(i).size(); j++){
+               // cout << roomVec.at(i).at(j).name << endl;
                 if(roomVec.at(i).at(j).name == dog.room){
                     room.roomList.insert(make_pair(dog.name, dog));
+                    room.name = dog.room;
                     roomVec.at(i).at(j) = room;
                 }
             }
         }
-
-        /*room.roomList.insert(make_pair(dog.name, dog));
-        string roomName = roomVec.at(m).at(n).name;
-        room.name = roomName;
-        roomVec[m][n] = room;
-
-        n++;
-        if(n == 8){
-            n = 0;
-            m++;
-        }*/
     }
     
 
     inFile.close();
     while(true){
-        cout << "\nMake a selection\n1: Create a new dog\n2: See dogs not roomed\n3: See kennels\n(TESTING COMMAND: 4 to fill)"  << endl;
+        cout << "\nMake a selection\n1: Create a new dog\n2: See dogs not roomed\n3: See kennels\n(TESTING COMMAND: 4 to fill)\n5: Save data"  << endl;
         cin >> input;
         if(cin.fail()){
             cout << "\nInvalid input" << endl; 
@@ -515,8 +517,7 @@ int main(){
                             }
                         }
                     } outFile.close();
-                }
-
+                }cout << "\nData saved" << endl;
             } else {
                 cout << "Bad input" << endl;
             } 
