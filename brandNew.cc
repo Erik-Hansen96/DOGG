@@ -15,7 +15,18 @@ struct Dogs {
     string goodWithAdults;
     string goodWithKids;
     string room;
-    void getSize();
+
+    Dogs() { // default constructor
+        name = "default";
+        breed = "default";
+        size = "Small";
+        age = 1.0f;
+        goodWithSmallDogs = "Yes";
+        goodWithLargeDogs = "Yes";
+        goodWithAdults = "Yes";
+        goodWithKids = "Yes";
+        room = "FF";
+    }
 };
 
 struct Kennel{
@@ -116,6 +127,7 @@ void addingDogs(vector<vector<Room>>& roomVec, Room* emptyRoom, unordered_map<st
                         }
                     }exit_loops:
                     if(found){
+                        dog.room = emptyRoom->name;
                         emptyRoom->roomList.emplace(doggoName, dog);
                         dogList.erase(doggoName);
                         cout << "\nInserted " << doggoName << " into room " << emptyRoom->name << endl;
@@ -141,6 +153,7 @@ void addingDogs(vector<vector<Room>>& roomVec, Room* emptyRoom, unordered_map<st
                                         }
                                         found = true;
                                         roomVec.at(i).at(j).roomList.emplace(doggoName, dog);
+                                        dog.room = roomVec.at(i).at(j).name;
                                         dogList.erase(doggoName);
                                         cout << "\nSuccessfully added " << doggoName << " to room " << roomVec.at(i).at(j).name << endl;
                                         roomVec.at(i).at(j).printDogList();
@@ -351,6 +364,7 @@ int main(){
             roomVec.at(i).at(j) = firstVec.at(i*8+j);
         }
     }
+
     ifstream inFile("save.txt");
     string line;
     int m = 0, n = 0;
@@ -372,7 +386,19 @@ int main(){
         dog.goodWithAdults = line;
         getline(inFile, line);
         dog.goodWithKids = line;
-        room.roomList.insert(make_pair(dog.name, dog));
+        getline(inFile, line);
+        dog.room = line;
+
+        for(int i = 0; i < roomVec.size(); i++){
+            for(int j = 0; j < roomVec.at(i).size(); j++){
+                if(roomVec.at(i).at(j).name == dog.room){
+                    room.roomList.insert(make_pair(dog.name, dog));
+                    roomVec.at(i).at(j) = room;
+                }
+            }
+        }
+
+        /*room.roomList.insert(make_pair(dog.name, dog));
         string roomName = roomVec.at(m).at(n).name;
         room.name = roomName;
         roomVec[m][n] = room;
@@ -381,9 +407,10 @@ int main(){
         if(n == 8){
             n = 0;
             m++;
-        }
+        }*/
     }
     
+
     inFile.close();
     while(true){
         cout << "\nMake a selection\n1: Create a new dog\n2: See dogs not roomed\n3: See kennels\n(TESTING COMMAND: 4 to fill)"  << endl;
@@ -482,7 +509,8 @@ int main(){
                                 outFile << dog.second.goodWithSmallDogs << endl;
                                 outFile << dog.second.goodWithLargeDogs << endl;
                                 outFile << dog.second.goodWithAdults << endl;
-                                outFile << dog.second.goodWithKids << endl;
+                                outFile << dog.second.goodWithKids << endl; 
+                                outFile << dog.second.room << endl;
 
                             }
                         }
