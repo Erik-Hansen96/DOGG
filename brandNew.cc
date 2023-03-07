@@ -450,6 +450,10 @@ int main(){
             Dogs newDog;
             cout << "\nEnter dog's name: " << endl;
             getline(cin, newDog.name);
+            if(newDog.name.size() > 22){
+                cout << "Name is too long" << endl;
+                continue;
+            }
             cout << "\nBreed:" << endl;
             cin >> newDog.breed;
             cin.ignore();
