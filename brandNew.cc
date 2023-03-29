@@ -4,48 +4,10 @@
 #include <iostream>
 #include <fstream>
 #include <unordered_map>
+#include "animalClasses.hpp"
 using namespace std;
-struct Dogs {
-    string name;
-    string breed;
-    string size;
-    float age;
-    string goodWithSmallDogs;
-    string goodWithLargeDogs;
-    string goodWithAdults;
-    string goodWithKids;
-    string room;
-
-    Dogs() {
-        name = "default";
-        breed = "default";
-        size = "Small";
-        age = 1.0f;
-        goodWithSmallDogs = "Yes";
-        goodWithLargeDogs = "Yes";
-        goodWithAdults = "Yes";
-        goodWithKids = "Yes";
-        room = "FF";
-    }
-};
-
-/* void dogScore(){
-int score = 0;
-int sizeScore = 0;
-if(dog.size == "Small"){
-
-}
-}*/
 
 
-
-
-struct Kennel{
-    string name;
-   //TODO int occupants;
-    Kennel(const string& kennelName) : name(kennelName) {}
-    unordered_map<string, Dogs> kennelMap;
-};
 struct Room{
     string name;
     unordered_map<string, Dogs> roomList;
@@ -417,6 +379,8 @@ int main(){
 
     inFile.close();
     while(true){
+        cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+        cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
         cout << "\nMake a selection\n1: Create a new dog\n2: See dogs not roomed\n3: See kennels\n(TESTING COMMAND: 4 to fill)\n5: Save data"  << endl;
         cin >> input;
         if(cin.fail()){
@@ -451,7 +415,8 @@ int main(){
             cout << "\nEnter dog's name: " << endl;
             getline(cin, newDog.name);
             if(newDog.name.size() > 22){
-                cout << "Name is too long" << endl;
+                cout << "\nName is too long. Hit ENTER to continue" << endl;
+                cin.ignore();
                 continue;
             }
             cout << "\nBreed:" << endl;
