@@ -8,21 +8,7 @@
 using namespace std;
 
 
-struct Room{
-    string name;
-    unordered_map<string, Dogs> roomList;
-    void printDogList(){
-        for(auto const& [name, dog] : roomList){
-            cout << name << endl;
-        } 
-    }
-    vector<string> dogNames;
-    void fillVec(){
-        for(auto const& [name, dog] : roomList){
-            dogNames.push_back(name);
-        } 
-    }
-};
+
 void roomDisplay(char roomLetter, vector<vector<Room>>& roomVec){
     int count = 0;
     Room rooms[8];
@@ -379,8 +365,6 @@ int main(){
 
     inFile.close();
     while(true){
-        cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
-        cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
         cout << "\nMake a selection\n1: Create a new dog\n2: See dogs not roomed\n3: See kennels\n(TESTING COMMAND: 4 to fill)\n5: Save data"  << endl;
         cin >> input;
         if(cin.fail()){

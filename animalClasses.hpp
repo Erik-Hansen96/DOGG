@@ -1,8 +1,17 @@
 #ifndef ANIMAL_CLASSES_H
 #define ANIMAL_CLASSES_H
 #include <string>
+#include <unordered_map>
+#include <iostream>
+#include <vector>
 
-struct Dogs {
+class Animals{
+public:
+    std::string animal;
+
+};
+class Dogs:public Animals {
+public:
     std::string name;
     std::string breed;
     std::string size;
@@ -14,6 +23,7 @@ struct Dogs {
     std::string room;
 
     Dogs() {
+        animal = "Dog";
         name = "default";
         breed = "default";
         size = "Small";
@@ -26,7 +36,21 @@ struct Dogs {
     }
 };
 
-
+struct Room{
+    std::string name;
+    std::unordered_map<std::string, Dogs> roomList;
+    void printDogList(){
+        for(auto const& [name, dog] : roomList){
+            std::cout << name << std::endl;
+        } 
+    }
+    std::vector<std::string> dogNames;
+    void fillVec(){
+        for(auto const& [name, dog] : roomList){
+            dogNames.push_back(name);
+        } 
+    }
+};
 
 
 
