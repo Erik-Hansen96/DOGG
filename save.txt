@@ -7,3 +7,12 @@ Yes
 Yes
 Yes
 A1
+e
+e
+Small
+1
+Yes
+Yes
+Yes
+Yes
+A2

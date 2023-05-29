@@ -3,11 +3,26 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <unordered_map>
 #include "animalClasses.hpp"
+#include <unordered_map>
 using namespace std;
 
 
+struct Room{
+    string name;
+    unordered_map<string, Dogs> roomList;
+    void printDogList(){
+        for(auto const& [name, dog] : roomList){
+            cout << name << endl;
+        } 
+    }
+    vector<string> dogNames;
+    void fillVec(){
+        for(auto const& [name, dog] : roomList){
+            dogNames.push_back(name);
+        } 
+    }
+};
 
 void roomDisplay(char roomLetter, vector<vector<Room>>& roomVec){
     int count = 0;
@@ -303,31 +318,9 @@ void goodWithKidsFunc(Dogs &newDog){
             return;
         }
 }
-int main(){
-    unordered_map<string, Dogs> dogList;
-    unordered_map<string, Room> roomList;
-    Room* emptyRoom = nullptr;
-    int input;
-    vector<Room> firstVec(64);
-    vector<vector<Room>> roomVec(8, vector<Room>(8));
-    char c = 'A';
-    int count = 1;
-    for(int i = 0; i < 64; i++){
-        if(i==0){}
-        else if((count-1) % 8 == 0){
-            c += 1;
-            count = count/8;
-        }firstVec.at(i).name = c + to_string(count);
-        count++;
-    }for(int i = 0; i < 8; i++){
-        for(int j = 0; j < 8; j++){
-            roomVec.at(i).at(j) = firstVec.at(i*8+j);
-        }
-    }
-
+void load(unordered_map<string, Dogs> &dogList, vector<vector<Room>> &roomVec){
     ifstream inFile("save.txt");
     string line;
-    int m = 0, n = 0;
     while (getline(inFile, line)) {
         Dogs dog;
         Room room;
@@ -361,11 +354,67 @@ int main(){
             }
         }
     }
-    
-
     inFile.close();
+}
+void save(unordered_map<string, Dogs> &dogList, vector<vector<Room>> &roomVec){
+    ofstream outFile("save.txt");
+    if(outFile.is_open()){
+        for(const auto& dog : dogList){
+            outFile << dog.second.name << endl;
+            outFile << dog.second.breed << endl;
+            outFile << dog.second.size << endl;
+            outFile << dog.second.age << endl;
+            outFile << dog.second.goodWithSmallDogs << endl;
+            outFile << dog.second.goodWithLargeDogs << endl;
+            outFile << dog.second.goodWithAdults << endl;
+            outFile << dog.second.goodWithKids << endl; 
+            outFile << dog.second.room << endl;
+        }
+        for(int i = 0; i < roomVec.size(); i++){
+            for(int j = 0; j < roomVec.at(i).size(); j++){
+                for(const auto& dog : roomVec.at(i).at(j).roomList){
+                    outFile << dog.second.name << endl;
+                    outFile << dog.second.breed << endl;
+                    outFile << dog.second.size << endl;
+                    outFile << dog.second.age << endl;
+                    outFile << dog.second.goodWithSmallDogs << endl;
+                    outFile << dog.second.goodWithLargeDogs << endl;
+                    outFile << dog.second.goodWithAdults << endl;
+                    outFile << dog.second.goodWithKids << endl; 
+                    outFile << dog.second.room << endl;
+                }
+            }
+        }
+        outFile.close();
+    }
+    cout << "\nData saved" << endl;
+}
+int main(){
+    unordered_map<string, Dogs> dogList;
+    unordered_map<string, Room> roomList;
+    Room* emptyRoom = nullptr;
+    int input;
+    vector<Room> firstVec(64);
+    vector<vector<Room>> roomVec(8, vector<Room>(8));
+    char c = 'A';
+    int count = 1;
+    for(int i = 0; i < 64; i++){
+        if(i==0){}
+        else if((count-1) % 8 == 0){
+            c += 1;
+            count = count/8;
+        }firstVec.at(i).name = c + to_string(count);
+        count++;
+    }for(int i = 0; i < 8; i++){
+        for(int j = 0; j < 8; j++){
+            roomVec.at(i).at(j) = firstVec.at(i*8+j);
+        }
+    }
+
+    load(dogList, roomVec);
+
     while(true){
-        cout << "\nMake a selection\n1: Create a new dog\n2: See dogs not roomed\n3: See kennels\n(TESTING COMMAND: 4 to fill)\n5: Save data"  << endl;
+        cout << "\nMake a selection\n1: Create a new dog\n2: See dogs not roomed\n3: See kennels\n(TESTING COMMAND: 4 to fill)\n5: Save data" << endl;
         cin >> input;
         if(cin.fail()){
             cout << "\nInvalid input" << endl; 
@@ -454,37 +503,7 @@ int main(){
                     addingDogs(roomVec, emptyRoom, dogList, toupper(input1));
                 }
             } else if (input == 5){
-                ofstream outFile("save.txt");
-                if(outFile.is_open()){
-                    for(const auto& dog : dogList){
-                                outFile << dog.second.name << endl;
-                                outFile << dog.second.breed << endl;
-                                outFile << dog.second.size << endl;
-                                outFile << dog.second.age << endl;
-                                outFile << dog.second.goodWithSmallDogs << endl;
-                                outFile << dog.second.goodWithLargeDogs << endl;
-                                outFile << dog.second.goodWithAdults << endl;
-                                outFile << dog.second.goodWithKids << endl; 
-                                outFile << dog.second.room << endl;
-
-                            }
-                    for(int i = 0; i < roomVec.size(); i++){
-                        for(int j = 0; j < roomVec.at(i).size(); j++){
-                            for(const auto& dog : roomVec.at(i).at(j).roomList){
-                                outFile << dog.second.name << endl;
-                                outFile << dog.second.breed << endl;
-                                outFile << dog.second.size << endl;
-                                outFile << dog.second.age << endl;
-                                outFile << dog.second.goodWithSmallDogs << endl;
-                                outFile << dog.second.goodWithLargeDogs << endl;
-                                outFile << dog.second.goodWithAdults << endl;
-                                outFile << dog.second.goodWithKids << endl; 
-                                outFile << dog.second.room << endl;
-
-                            }
-                        }
-                    } outFile.close();
-                }cout << "\nData saved" << endl;
+               save(dogList, roomVec);
             } else {
                 cout << "Bad input" << endl;
             } 
